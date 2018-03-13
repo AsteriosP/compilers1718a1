@@ -1,10 +1,22 @@
+teams = {
+	"team1" : ["0", "1"],
+	"team2" : ["2"],
+	"team3" : ["3"],
+	"team4" : ["4", "5"],
+	"team5" : ["6", "7", "8", "9"],
+	"divider" : [":", "."]
+}
 
 def getchar(words,pos):
-	""" returns char at pos of words, or None if out of bounds """
-
-	if pos<0 or pos>=len(words): return None
-
-	return words[pos]
+	if pos<0 or pos>=len(words):
+		return None
+	else:
+		char = words[pos]
+		for key in teams.keys():
+			if char in teams[key]:
+				# print(char, key)
+				return key
+	return None
 	
 
 def scan(text,transition_table,accept_states):
@@ -20,7 +32,7 @@ def scan(text,transition_table,accept_states):
 	while True:
 		
 		c = getchar(text,pos)	# get next char
-		
+
 		if state in transition_table and c in transition_table[state]:
 		
 			state = transition_table[state][c]	# set new state
@@ -38,25 +50,23 @@ def scan(text,transition_table,accept_states):
 	
 # the transition table, as a dictionary
 
-# Αντικαταστήστε με το δικό σας λεξικό μεταβάσεων...
-td = { 'q0':{ 't':'q1','l':'q2' },
-       'q1':{ 'e':'q3' },
-       'q2':{ 'o':'q8' },
-       'q3':{ 's':'q4','r':'q6' },
-       'q4':{ 't':'q5' },
-       'q6':{ 'm':'q7' },
-       'q8':{ 'n':'q9' },
-       'q9':{ 'g':'q10'}
-     } 
+
+td = {
+	'q0':{ 'team1':'q6', 'team2':'q1', 'team3':'q8', 'team4':'q8', 'team5':'q8' },
+    'q1':{ 'team1':'q2', 'team2':'q2', 'team3':'q2', 'divider':'q3' },
+    'q2':{ 'divider':'q3' },
+    'q3':{ 'team1':'q4', 'team2':'q4', 'team3':'q4', 'team4':'q4' },
+    'q4':{ 'team1':'q5', 'team2':'q5', 'team3':'q5', 'team4':'q5', 'team5':'q5' },
+    'q6':{ 'team1':'q7', 'team2':'q7', 'team3':'q7', 'team4':'q7', 'team5':'q7', 'divider':'q3' },
+    'q7':{ 'divider':'q3' },
+    'q8':{ 'divider':'q3' }
+}
 
 # the dictionary of accepting states and their
 # corresponding token
 
-# Αντικαταστήστε με το δικό σας λεξικό καταστάσεων αποδοχής...
-ad = { 'q5':'TEST_TOKEN',
-       'q7':'TERM_TOKEN',
-       'q10':'LONG_TOKEN'
-     }
+
+ad = {'q5':'TIME_TOKEN'}
 
 
 # get a string from input
@@ -73,7 +83,7 @@ while text:	# that is, while len(text)>0
 		break
 	
 	print("token:",token,"string:",text[:position])
-	
+
 	# remaining text for next scan
 	text = text[position:]
 	
